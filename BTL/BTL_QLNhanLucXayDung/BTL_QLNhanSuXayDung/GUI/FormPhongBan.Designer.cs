@@ -17,6 +17,7 @@
 
         private void InitializeComponent()
         {
+          
             this.lblTieude = new System.Windows.Forms.Label();
             this.groupBoxThongTin = new System.Windows.Forms.GroupBox();
             this.txtTenPhong = new System.Windows.Forms.TextBox();
@@ -147,6 +148,10 @@
             this.btnThem.UseVisualStyleBackColor = true;
             this.btnThem.Click += new System.EventHandler(this.btnThem_Click);
             // 
+            this.btnThem.Text = "&Thêm mới (F1)";
+            this.btnSua.Text = "&Sửa (F2)";
+            this.btnXoa.Text = "&Xóa (F3)";
+            this.btnLamMoi.Text = "&Làm mới (F4)";
             // dgvPhongBan
             // 
             this.dgvPhongBan.AllowUserToAddRows = false;

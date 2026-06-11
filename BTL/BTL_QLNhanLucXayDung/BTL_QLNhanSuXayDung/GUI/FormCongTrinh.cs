@@ -11,11 +11,58 @@ namespace BTL_QLNhanSuXayDung.GUI
         public FormCongTrinh()
         {
             InitializeComponent();
+
+            // KÍCH HOẠT PHÍM TẮT: Cho phép Form đánh chặn và nhận diện phím bấm trước các điều khiển con
+            this.KeyPreview = true;
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormCongTrinh_KeyDown);
         }
 
         private void FormCongTrinh_Load(object sender, EventArgs e)
         {
             ResetForm();
+        }
+
+        /// <summary>
+        /// Bộ lắng nghe sự kiện Phím tắt toàn diện cho phân hệ quản lý công trình (F1, F2, F3, F4, ESC)
+        /// </summary>
+        private void FormCongTrinh_KeyDown(object sender, KeyEventArgs e)
+        {
+            // Phím F1: Kích hoạt Thêm mới công trình
+            if (e.KeyCode == Keys.F1 && btnThem.Enabled)
+            {
+                e.Handled = true; // Ngăn chặn tiếng bíp thông báo của Windows
+                btnThem_Click(sender, e);
+            }
+            // Phím F2: Kích hoạt Sửa / Cập nhật thông tin công trình
+            else if (e.KeyCode == Keys.F2)
+            {
+                e.Handled = true;
+                btnSua_Click(sender, e);
+            }
+            // Phím F3: Kích hoạt Xóa công trình được chọn
+            else if (e.KeyCode == Keys.F3)
+            {
+                e.Handled = true;
+                btnXoa_Click(sender, e);
+            }
+            // Phím F4: Làm mới form / Tải lại toàn bộ danh sách dữ liệu gốc
+            else if (e.KeyCode == Keys.F4)
+            {
+                e.Handled = true;
+                btnLamMoi_Click(sender, e);
+            }
+            // Phím F5: Kích hoạt tìm kiếm
+            if (e.KeyCode == Keys.F5)
+            {
+                e.Handled = true; // Ngăn hành động refresh mặc định nếu có của Windows
+                LayDanhSachCongTrinh(txtTimKiem.Text.Trim());
+            }
+            // Phím ESC: Đóng nhanh Form con để quay lại Dashboard chính
+            else if (e.KeyCode == Keys.Escape)
+            {
+                e.Handled = true;
+                this.Close();
+            }
         }
 
         // 1. Hàm tải danh sách công trình bằng Stored Procedure
@@ -90,7 +137,7 @@ namespace BTL_QLNhanSuXayDung.GUI
         // 3. Chức năng CẬP NHẬT / SỬA thông tin sử dụng Stored Procedure
         private void btnSua_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(txtMaCongTrinh.Text))
+            if (string.IsNullOrEmpty(txtMaCongTrinh.Text.Trim()))
             {
                 MessageBox.Show("Vui lòng chọn công trình từ danh sách trước khi sửa!", "Nhắc nhở", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -127,7 +174,7 @@ namespace BTL_QLNhanSuXayDung.GUI
         // 4. Chức năng XÓA CÔNG TRÌNH sử dụng Stored Procedure
         private void btnXoa_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(txtMaCongTrinh.Text))
+            if (string.IsNullOrEmpty(txtMaCongTrinh.Text.Trim()))
             {
                 MessageBox.Show("Vui lòng chọn công trình cần xóa từ danh sách!", "Nhắc nhở", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -162,7 +209,7 @@ namespace BTL_QLNhanSuXayDung.GUI
             }
         }
 
-        // Sự kiện click chọn dòng trên DataGridView (Đã bọc kiểm tra an toàn tránh Index Out Of Range)
+        // Sự kiện click chọn dòng trên DataGridView
         private void dgvCongTrinh_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0 && e.RowIndex < dgvCongTrinh.Rows.Count)
@@ -227,7 +274,7 @@ namespace BTL_QLNhanSuXayDung.GUI
         // Hàm kiểm tra tính toàn vẹn của dữ liệu nghiệp vụ xây dựng
         private bool KiemTraHopLe()
         {
-            if (string.IsNullOrEmpty(txtMaCongTrinh.Text) || string.IsNullOrEmpty(txtTenCongTrinh.Text) || string.IsNullOrEmpty(txtDiaDiem.Text))
+            if (string.IsNullOrEmpty(txtMaCongTrinh.Text.Trim()) || string.IsNullOrEmpty(txtTenCongTrinh.Text.Trim()) || string.IsNullOrEmpty(txtDiaDiem.Text.Trim()))
             {
                 MessageBox.Show("Vui lòng điền đầy đủ tất cả các trường thông tin có dấu (*)", "Yêu cầu dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
@@ -246,14 +293,6 @@ namespace BTL_QLNhanSuXayDung.GUI
             }
 
             return true;
-        }
-
-        private void FormCongTrinh_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Escape)
-            {
-                this.Close();
-            }
         }
     }
 }
