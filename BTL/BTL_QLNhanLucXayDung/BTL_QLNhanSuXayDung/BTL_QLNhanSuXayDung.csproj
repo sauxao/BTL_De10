@@ -133,8 +133,23 @@
     <EmbeddedResource Include="GUI\FormBaoCaoChuyenCan.resx">
       <DependentUpon>FormBaoCaoChuyenCan.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GUI\FormBaoCaoCongTrinh.resx">
+      <DependentUpon>FormBaoCaoCongTrinh.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\FormChamCong.resx">
+      <DependentUpon>FormChamCong.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\FormCongTrinh.resx">
+      <DependentUpon>FormCongTrinh.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GUI\FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\FormNhanVien.resx">
+      <DependentUpon>FormNhanVien.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GUI\FormThiCong.resx">
+      <DependentUpon>FormThiCong.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

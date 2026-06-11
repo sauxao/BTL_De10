@@ -11,6 +11,10 @@ namespace BTL_QLNhanSuXayDung.GUI
         public FormThiCong()
         {
             InitializeComponent();
+
+            // KÍCH HOẠT PHÍM TẮT: Cho phép Form đánh chặn và xử lý phím bấm trước các điều khiển con
+            this.KeyPreview = true;
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormThiCong_KeyDown);
         }
 
         private void FormThiCong_Load(object sender, EventArgs e)
@@ -18,6 +22,49 @@ namespace BTL_QLNhanSuXayDung.GUI
             TaiNhanVienVaoCombobox();
             TaiCongTrinhVaoCombobox();
             ResetForm();
+        }
+
+        /// <summary>
+        /// Bộ lắng nghe và điều hướng sự kiện phím tắt toàn cục cho Phân hệ Phân công Thi công
+        /// </summary>
+        private void FormThiCong_KeyDown(object sender, KeyEventArgs e)
+        {
+            // Phím F1: Kích hoạt Thêm mới phân công thi công
+            if (e.KeyCode == Keys.F1 && btnThem.Enabled)
+            {
+                e.Handled = true; // Ngăn chặn âm thanh bíp mặc định của Windows
+                btnThem_Click(sender, e);
+            }
+            // Phím F2: Kích hoạt Sửa số ngày công
+            else if (e.KeyCode == Keys.F2)
+            {
+                e.Handled = true;
+                btnSua_Click(sender, e);
+            }
+            // Phím F3: Kích hoạt Xóa/Hủy phân công thi công
+            else if (e.KeyCode == Keys.F3)
+            {
+                e.Handled = true;
+                btnXoa_Click(sender, e);
+            }
+            // Phím F4: Làm mới Form và nạp lại danh sách gốc từ hệ thống
+            else if (e.KeyCode == Keys.F4)
+            {
+                e.Handled = true;
+                btnLamMoi_Click(sender, e);
+            }
+            // Phím F5: Kích hoạt tìm kiếm
+            if (e.KeyCode == Keys.F5)
+            {
+                e.Handled = true; // Ngăn hành động refresh mặc định nếu có của Windows
+                LayDanhSachThiCong(txtTimKiem.Text.Trim());
+            }
+            // Phím ESC: Thoát nhanh form thi công để quay lại bảng điều hướng chính
+            else if (e.KeyCode == Keys.Escape)
+            {
+                e.Handled = true;
+                this.Close();
+            }
         }
 
         private void TaiNhanVienVaoCombobox()
@@ -125,7 +172,11 @@ namespace BTL_QLNhanSuXayDung.GUI
         // Chức năng SỬA số ngày công
         private void btnSua_Click(object sender, EventArgs e)
         {
-            if (cboNhanVien.SelectedValue == null || cboCongTrinh.SelectedValue == null) return;
+            if (cboNhanVien.SelectedValue == null || cboCongTrinh.SelectedValue == null)
+            {
+                MessageBox.Show("Vui lòng chọn thông tin phân công dưới danh sách trước khi sửa!", "Nhắc nhở", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
             if (!int.TryParse(txtSoNgayCong.Text.Trim(), out int soNgayCong) || soNgayCong < 0)
             {
@@ -157,7 +208,11 @@ namespace BTL_QLNhanSuXayDung.GUI
         // Chức năng XÓA phân công thi công
         private void btnXoa_Click(object sender, EventArgs e)
         {
-            if (cboNhanVien.SelectedValue == null || cboCongTrinh.SelectedValue == null) return;
+            if (cboNhanVien.SelectedValue == null || cboCongTrinh.SelectedValue == null)
+            {
+                MessageBox.Show("Vui lòng chọn thông tin phân công dưới danh sách trước khi xóa!", "Nhắc nhở", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
             DialogResult dr = MessageBox.Show("Bạn có chắc muốn hủy phân công thi công của nhân viên này tại công trình đã chọn?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (dr == DialogResult.No) return;
@@ -205,6 +260,18 @@ namespace BTL_QLNhanSuXayDung.GUI
         private void btnTimKiem_Click(object sender, EventArgs e)
         {
             LayDanhSachThiCong(txtTimKiem.Text.Trim());
+        }
+
+        /// <summary>
+        /// Bổ sung sự kiện KeyDown riêng cho TextBox Tìm kiếm: Gõ từ khóa rồi ấn Enter để thực thi tìm kiếm luôn
+        /// </summary>
+        private void txtTimKiem_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true; // Triệt tiêu tiếng chuông cảnh báo hệ thống
+                btnTimKiem_Click(sender, e);
+            }
         }
 
         private void btnLamMoi_Click(object sender, EventArgs e)
